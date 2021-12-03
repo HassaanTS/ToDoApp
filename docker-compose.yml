@@ -1,0 +1,38 @@
+version: '3.4'
+
+services:
+  todoserver:
+    image: todoserver_fiber
+    env_file:
+        - .env
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    # environment:
+    #   APP_PORT: 7000
+    #   MONGODB_HOSTNAME: mongodb
+    #   MONGODB_PORT: 27017
+    #   MONGODB_DBNAME: todos
+    #   MONGODB_DBUSERNAME: todos
+    #   MONGODB_DBPASSWORD: todos
+    # # ports:
+    # #   - 7000:7000
+    volumes:
+      - .:/app
+    links:
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    ports: 
+      - 27017:27017
+    volumes:
+      - data:/data/db
+  air:
+    image: cosmtrek/air
+    working_dir: /app
+    ports:
+      - 7000:7000
+    volumes:
+      - .:/app
+volumes:
+  data:
