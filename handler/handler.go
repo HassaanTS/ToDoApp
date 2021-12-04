@@ -1,10 +1,10 @@
 package handler
 
 import (
+	"ToDoApp/config"
 	"ToDoApp/db"
 	"ToDoApp/todos"
 	"fmt"
-	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
@@ -24,10 +24,10 @@ func GetRecords(c *fiber.Ctx) error {
 	}
 	defer db.DisconnectDB(client, ctx, cancel)
 
-	records, err := db.GetRecords(client, ctx, os.Getenv("MONGODB_DBNAME"), os.Getenv("MONGODB_COLLECTION"))
+	records, err := db.GetRecords(client, ctx, config.GlobalConfig.MongoDBName, config.GlobalConfig.MongoDBCollection)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON((fiber.Map{
-			"error": fmt.Errorf("error while fetching records from the database...%w", err),
+			"error": fmt.Errorf("error while fetching records from the database...%w", err).Error(),
 		}))
 	}
 
@@ -56,7 +56,7 @@ func NewRecord(c *fiber.Ctx) error {
 	}
 
 	// insert record in db
-	insertOneResult, err := db.InsertRecord(client, ctx, os.Getenv("MONGODB_DBNAME"), os.Getenv("MONGODB_COLLECTION"), t)
+	insertOneResult, err := db.InsertRecord(client, ctx, config.GlobalConfig.MongoDBName, config.GlobalConfig.MongoDBCollection, t)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON((fiber.Map{
 			"error": fmt.Errorf("error while inserting record in the database...%w", err),
@@ -98,7 +98,7 @@ func UpdateRecord(c *fiber.Ctx) error {
 	update := bson.D{{"$set", changes}}
 
 	// update the record
-	result, err := db.UpdateRecord(client, ctx, os.Getenv("MONGODB_DBNAME"), os.Getenv("MONGODB_COLLECTION"), filter, update)
+	result, err := db.UpdateRecord(client, ctx, config.GlobalConfig.MongoDBName, config.GlobalConfig.MongoDBCollection, filter, update)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON((fiber.Map{
 			"error": fmt.Errorf("error while updating record...%w", err),
@@ -125,7 +125,7 @@ func DeleteRecord(c *fiber.Ctx) error {
 	filter := bson.M{"_id": _id}
 
 	// update the record
-	result, err := db.DeleteRecord(client, ctx, os.Getenv("MONGODB_DBNAME"), os.Getenv("MONGODB_COLLECTION"), filter)
+	result, err := db.DeleteRecord(client, ctx, config.GlobalConfig.MongoDBName, config.GlobalConfig.MongoDBCollection, filter)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON((fiber.Map{
 			"error": fmt.Errorf("error while deleting record...%w", err),

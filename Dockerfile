@@ -5,5 +5,4 @@ RUN mkdir /app
 ADD . /app/
 WORKDIR /app
 RUN go get -d -v
-# CMD ["go", "run",  "main.go"]
 CMD air

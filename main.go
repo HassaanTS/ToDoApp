@@ -2,27 +2,18 @@ package main
 
 import (
 	"fmt"
-	"os"
 
+	"ToDoApp/config"
 	"ToDoApp/router"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/joho/godotenv"
 )
-
-func loadEnv() error {
-	err := godotenv.Load(".env")
-	if err != nil {
-		return fmt.Errorf("couldn't load environment from .env file...%w", err)
-	}
-	return nil
-}
 
 func main() {
 	var err error
 	// load environment
-	err = loadEnv()
+	err = config.LoadEnv()
 	if err != nil {
 		fmt.Println("error while loading environment...%w", err)
 	}
@@ -34,7 +25,7 @@ func main() {
 	router.SetupRoutes(accessPoint)
 
 	// serve app
-	adress := fmt.Sprintf(":%s", os.Getenv("APP_PORT"))
+	adress := fmt.Sprintf(":%s", config.GlobalConfig.AppPort)
 	err = app.Listen(adress)
 	if err != nil {
 		fmt.Print("could not start server on ", adress)

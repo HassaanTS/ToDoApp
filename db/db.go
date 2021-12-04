@@ -1,10 +1,10 @@
 package db
 
 import (
+	"ToDoApp/config"
 	"ToDoApp/todos"
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -13,9 +13,9 @@ import (
 )
 
 func BuildURI() string {
-	dbHost := os.Getenv("MONGODB_HOSTNAME")
-	dbPort := os.Getenv("MONGODB_PORT")
-	dbName := os.Getenv("MONGODB_DBNAME")
+	dbHost := config.GlobalConfig.MongoHost
+	dbPort := config.GlobalConfig.MongoPort
+	dbName := config.GlobalConfig.MongoDBName
 	uri := fmt.Sprintf("mongodb://%s:%s/%s", dbHost, dbPort, dbName)
 	return uri
 }

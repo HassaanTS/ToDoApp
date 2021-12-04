@@ -8,15 +8,6 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    # environment:
-    #   APP_PORT: 7000
-    #   MONGODB_HOSTNAME: mongodb
-    #   MONGODB_PORT: 27017
-    #   MONGODB_DBNAME: todos
-    #   MONGODB_DBUSERNAME: todos
-    #   MONGODB_DBPASSWORD: todos
-    # # ports:
-    # #   - 7000:7000
     volumes:
       - .:/app
     links:
