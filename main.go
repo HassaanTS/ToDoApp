@@ -7,6 +7,7 @@ import (
 	"ToDoApp/router"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
@@ -20,6 +21,10 @@ func main() {
 
 	// starting fiber app
 	app := fiber.New()
+
+	// cors for resource sharing
+	app.Use(cors.New())
+
 	// set up router
 	accessPoint := app.Group("/", logger.New())
 	router.SetupRoutes(accessPoint)

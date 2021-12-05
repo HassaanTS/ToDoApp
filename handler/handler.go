@@ -20,7 +20,7 @@ func GetRecords(c *fiber.Ctx) error {
 	// open and close connection so the handle doesn't get stale
 	client, ctx, cancel, err := db.ConnectDB(db.BuildURI())
 	if err != nil {
-		return fmt.Errorf("couldn't connect to database")
+		return fmt.Errorf("couldn't connect to database...%w", err)
 	}
 	defer db.DisconnectDB(client, ctx, cancel)
 
@@ -41,7 +41,7 @@ func NewRecord(c *fiber.Ctx) error {
 	// open and close connection so the handle doesn't get stale
 	client, ctx, cancel, err := db.ConnectDB(db.BuildURI())
 	if err != nil {
-		return fmt.Errorf("couldn't connect to database")
+		return fmt.Errorf("couldn't connect to database...%w", err)
 	}
 	defer db.DisconnectDB(client, ctx, cancel)
 
@@ -73,13 +73,16 @@ func UpdateRecord(c *fiber.Ctx) error {
 	// open and close connection so the handle doesn't get stale
 	client, ctx, cancel, err := db.ConnectDB(db.BuildURI())
 	if err != nil {
-		return fmt.Errorf("couldn't connect to database")
+		return fmt.Errorf("couldn't connect to database...%w", err)
 	}
 	defer db.DisconnectDB(client, ctx, cancel)
 
 	// id needs to be primitive id type to actually filter db
 	id := c.Params("id")
-	_id, _ := primitive.ObjectIDFromHex(id)
+	_id, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return fmt.Errorf("couldn't convert ID parameter to primitive object...%w", err)
+	}
 	filter := bson.M{"_id": _id}
 
 	// parse body for changes
@@ -115,13 +118,16 @@ func DeleteRecord(c *fiber.Ctx) error {
 	// open and close connection so the handle doesn't get stale
 	client, ctx, cancel, err := db.ConnectDB(db.BuildURI())
 	if err != nil {
-		return fmt.Errorf("couldn't connect to database")
+		return fmt.Errorf("couldn't connect to database...%w", err)
 	}
 	defer db.DisconnectDB(client, ctx, cancel)
 
 	// id needs to be primitive id type to actually filter db
 	id := c.Params("id")
-	_id, _ := primitive.ObjectIDFromHex(id)
+	_id, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return fmt.Errorf("couldn't convert ID parameter to primitive object...%w", err)
+	}
 	filter := bson.M{"_id": _id}
 
 	// update the record

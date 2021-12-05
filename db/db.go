@@ -46,7 +46,10 @@ func DisconnectDB(client *mongo.Client, ctx context.Context, cancel context.Canc
 func InsertRecord(client *mongo.Client, ctx context.Context, dataBase, col string, doc interface{}) (*mongo.InsertOneResult, error) {
 	collection := client.Database(dataBase).Collection(col)
 	result, err := collection.InsertOne(ctx, doc)
-	return result, err
+	if err != nil {
+		return result, fmt.Errorf("error while inserting new record...%w", err)
+	}
+	return result, nil
 }
 
 // GET
@@ -57,7 +60,7 @@ func GetRecords(client *mongo.Client, ctx context.Context, dataBase, col string)
 	collection := client.Database(dataBase).Collection(col)
 	result, err := collection.Find(ctx, query, options.Find().SetProjection(field))
 	if err != nil {
-		return records, fmt.Errorf("error while querying for records...%w", err)
+		return records, fmt.Errorf("error while querying for record...%w", err)
 	}
 
 	// get all records from cursor
@@ -72,12 +75,18 @@ func GetRecords(client *mongo.Client, ctx context.Context, dataBase, col string)
 func UpdateRecord(client *mongo.Client, ctx context.Context, dataBase, col string, filter, update interface{}) (result *mongo.UpdateResult, err error) {
 	collection := client.Database(dataBase).Collection(col)
 	result, err = collection.UpdateOne(ctx, filter, update)
-	return
+	if err != nil {
+		return result, fmt.Errorf("error while updating records...%w", err)
+	}
+	return result, nil
 }
 
 // DELETE
 func DeleteRecord(client *mongo.Client, ctx context.Context, dataBase, col string, query interface{}) (result *mongo.DeleteResult, err error) {
 	collection := client.Database(dataBase).Collection(col)
 	result, err = collection.DeleteOne(ctx, query)
-	return
+	if err != nil {
+		return result, fmt.Errorf("error while deleting records...%w", err)
+	}
+	return result, nil
 }
