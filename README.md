@@ -27,18 +27,19 @@ The application provides an interface to various interactions with the database.
 #### Deployment
 The application can be accessed in a number of different ways
 - Docker:
-There is a docker-compose file that orchestrates the application container built from the Dockerfile along with `mongodb` and `air`(Live reload for Go apps). If you're running the project for the first time you can run the following command:
+There is a docker-compose file that orchestrates the application container built from the Dockerfile along with `mongodb` and `air`(Live reload for Go apps). Running the containerized application saves you the hassle of downloading and setting up `mongodb`. If you're running the project for the first time you can run the following command:
 ```
 docker-compose up --build
-
-// thereafter, simply run 
+```
+thereafter, simply run 
+```
 docker-compose up
 ```
-- Run in the project directory:
+- Run in the project directory (need `mongodb` installed on the system and `mongod service` running on port 27017):
 ```
 go run main.go
 ```
- - Build and execute the application:
+ - Build and execute the application (need `mongodb` installed on the system and `mongod service` running on port 27017):
 ```
 go build -o bin/todo
 
